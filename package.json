@@ -1,11 +1,12 @@
 {
-  "name": "task-app",
+  "name": "to-do-app",
   "version": "0.1.0",
   "author": "GoodTasks",
   "license": "MIT",
   "main": "main.js",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
+    "electron": "^13.0.1",
     "electron-builder": "^22.11.1"
   },
   "scripts": {
@@ -21,9 +22,18 @@
     "directories": {
       "buildResources": "build"
     },
-    "nsis":{
+    "nsis": {
       "allowToChangeInstallationDirectory": true,
       "oneClick": false
     }
-  }
+  },
+  "description": "A simple task management app.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladM7/Test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VladM7/Test/issues"
+  },
+  "homepage": "https://github.com/VladM7/Test#readme"
 }
