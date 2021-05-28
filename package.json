@@ -1,0 +1,29 @@
+{
+  "name": "task-app",
+  "version": "0.1.0",
+  "author": "GoodTasks",
+  "license": "MIT",
+  "main": "main.js",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "electron-builder": "^22.11.1"
+  },
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.tasks.app",
+    "productName": "To Do Lists, Inc.",
+    "target": "NSIS",
+    "directories": {
+      "buildResources": "build"
+    },
+    "nsis":{
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
+  }
+}
