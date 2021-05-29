@@ -30,7 +30,7 @@
   "description": "A simple task management app.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VladM7/Test.git"
+    "url": "git+https://github.com/VladM7/To_Do"
   },
   "bugs": {
     "url": "https://github.com/VladM7/Test/issues"
