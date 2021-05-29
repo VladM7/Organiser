@@ -49,14 +49,20 @@ $("#clearAll").click(() => {
   });
 })
 
-/*
+
 $(document).on('mouseenter', 'li', function () {
-  $(this).css("text-decoration", "line-through");
+  //$(this).css("text-decoration", "line-through");
+
+  $(this).children().remove();
+  $(this).prepend(`<i class="far fa-times-circle"></i>`);
 });
 $(document).on('mouseleave', 'li', function () {
-  $(this).css("text-decoration", "none");
+  //$(this).css("text-decoration", "none");
+
+  $(this).children().remove();
+  $(this).prepend(`<i class="far fa-circle"></i>`);
 });
-*/
+
 
 $(document).on('click', 'li', function () {
   //$(this).css("text-decoration", "line-through");
