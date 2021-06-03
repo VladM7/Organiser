@@ -1,21 +1,21 @@
-#title1{
-    margin-left: 25px;
-    margin-top: 5px;
+#title1 {
+  margin-left: 25px;
+  margin-top: 5px;
 }
 
-.container{
-    margin-left: 15px;
+.container {
+  margin-left: 15px;
 }
 
 .lightgray::placeholder {
-    color: #bdbdbd;
-    opacity: 1;
- }
- 
- .lightgray:-ms-input-placeholder {
-    color: #bdbdbd;
- }
- 
- .lightgray::-ms-input-placeholder {
-    color: #bdbdbd;
- }
+  color: #bdbdbd;
+  opacity: 1;
+}
+
+.lightgray:-ms-input-placeholder {
+  color: #bdbdbd;
+}
+
+.lightgray::-ms-input-placeholder {
+  color: #bdbdbd;
+}
