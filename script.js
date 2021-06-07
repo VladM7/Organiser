@@ -32,18 +32,18 @@ document.onkeyup = (keyUpEvent) => {
 function addtask() {
   if ($("#newTask").val().trim() != "") {
     $(".list-group").append(
-      `<li class="list-group-item"><i class="far fa-circle"></i>` +
+      `<div class="item"><i class="far fa-circle"></i>` +
         "\xa0\xa0\xa0\xa0" +
         $("#newTask").val() +
-        `</li>`
+        `<div class="ui divider"></div></div>`
     );
     $("#newTask").val("");
 
     if ($(".important").is(":checked") == 1)
-      $("li").last().addClass("importantItems");
+      $(".item").last().addClass("importantItems");
     if (activeMode == 1) {
-      $("li").last().css("color", colors[0]);
-      $("li").last().css("background-color", colors[2]);
+      $(".item").last().css("color", colors[0]);
+      $(".item").last().css("background-color", colors[2]);
     }
     $(".list-group-item").css("background-color", currentListColor);
     $(".importantItems").css("background-color", "#ffb0b0");
@@ -74,8 +74,8 @@ $("#darkMode").on("change", function () {
     $("body").css("background-color", colors[1]);
     $("body").css("color", colors[0]);
     $("#newTask").css("background-color", colors[2]);
-    $("li").css("color", colors[0]);
-    $("li").css("background-color", colors[2]);
+    $(".item").css("color", colors[0]);
+    $(".item").css("background-color", colors[2]);
     $("#newTask").addClass("lightgray");
     $("#newTask").css("color", colors[0]);
   } else if ($("#darkMode").is(":not(:checked)")) {
@@ -83,37 +83,37 @@ $("#darkMode").on("change", function () {
     $("body").css("background-color", colors[0]);
     $("body").css("color", colors[3]);
     $("#newTask").css("background-color", colors[0]);
-    $("li").css("background-color", colors[0]);
-    $("li").css("color", colors[3]);
+    $(".item").css("background-color", colors[0]);
+    $(".item").css("color", colors[3]);
     $("#newTask").removeClass("lightgray");
     $("#newTask").css("color", colors[3]);
   }
 });
 
 $("#clearAll").click(() => {
-  $("#list")
+  $(".list-group")
     .children()
     .fadeOut("normal", function () {
-      $("#list").children().remove();
+      $(".list-group").children().remove();
     });
 });
 
-$(document).on("mouseenter", "li", function () {
+$(document).on("mouseenter", ".item", function () {
   //$(this).css("text-decoration", "line-through");
 
-  $(this).children().remove();
+  $(this).children("i").remove();
   $(this).prepend(`<i class="far fa-times-circle"></i>`);
 });
-$(document).on("mouseleave", "li", function () {
+$(document).on("mouseleave", ".item", function () {
   //$(this).css("text-decoration", "none");
 
-  $(this).children().remove();
+  $(this).children("i").remove();
   $(this).prepend(`<i class="far fa-circle"></i>`);
 });
 
-$(document).on("click", "li", function () {
+$(document).on("click", ".item", function () {
   //$(this).css("text-decoration", "line-through");
-  $(this).children().remove();
+  $(this).children("i").remove();
   $(this).prepend(`<i class="far fa-times-circle"></i>`);
   $(this).fadeOut("slow", function () {
     $(this).remove();

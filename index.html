@@ -20,15 +20,19 @@ integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+y
 </head>
 
 <body>
-    <h1 id="title1"><b>To Do List</b></h1>
+    <!--<h1 id="title1"><b>To Do List</b></h1>-->
     <br>
     <i></i>
     <br>
     <div class="container">
         <div class="row">
-            <div class="col-6">
+            <div class="menu">
                 <div class="ui search">
-                    <input class="prompt" id="newTask" placeholder="Enter New Task" />
+                    <div class="ui icon input">
+                        <i class="plus icon"></i>
+                        <input class="prompt" id="newTask" placeholder="Enter New Task">
+                    </div>
+                    
                 </div>
                 <br>
                 <button type="button" class="ui button" id="addTask">
@@ -59,8 +63,8 @@ integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+y
                 </div>
             </div>
             <div id="lista" class="col-6">
-                <ul id="list" class="list-group" style="user-select: none">
-                </ul>
+                <div class="ui list list-group" style="user-select: none">
+                    </div>
             </div>
         </div>
     </div>
