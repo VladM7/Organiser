@@ -4,7 +4,7 @@
 }
 
 .container {
-  margin-left: 15px;
+  padding: 40px;
 }
 
 .lightgray::placeholder {
@@ -22,11 +22,15 @@
 
 .menu {
   position: fixed;
-  bottom: 0px;
+  bottom: 10px;
 }
 
-.prompt{
+.prompt {
   width: 1100px;
   height: 50px;
+  font-size: 16px;
+}
+
+.item {
   font-size: 16px;
 }

@@ -20,22 +20,22 @@ integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+y
 </head>
 
 <body>
-    <!--<h1 id="title1"><b>To Do List</b></h1>-->
+    <!--<h1 id="title1"><b>To Do List</b></h1>
     <br>
     <i></i>
-    <br>
+    <br>-->
     <div class="container">
-        <div class="row">
             <div class="menu">
                 <div class="ui search">
-                    <div class="ui icon input">
-                        <i class="plus icon"></i>
+                    <div class="ui left icon input">
+                        <i class="plus icon" style="user-select: none"></i>
                         <input class="prompt" id="newTask" placeholder="Enter New Task">
                     </div>
                     
                 </div>
                 <br>
-                <button type="button" class="ui button" id="addTask">
+                <button type="button" class="ui labeled icon button" id="addTask">
+                    <i class="arrow right icon"></i>
                     Add Task
                 </button>
                 <!--
@@ -43,30 +43,31 @@ integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+y
                     Change colors
                 </button>
                 -->
-                <button type="button" class="ui button" id="clearAll">
+                <button type="button" class="ui labeled icon button" id="clearAll">
+                    <i class="eraser icon"></i>
                     Clear all
                 </button>
                 <br>
                 <br>
-                <div class="ui checkbox">
+                <!--<div class="ui checkbox">
                     <input class="form-check-input important" type="checkbox" value="" id="defaultCheck">
                     <label class="form-check-label" for="defaultCheck1">
                         Mark as important
                     </label>
-                </div>
-                <br>
-                <div class="ui checkbox switchModes">
+                </div><br>-->
+                <!--
+                    TODO dark mode in electron menu
+                    <div class="ui checkbox switchModes">
                     <input class="form-check-input" type="checkbox" value="" id="darkMode">
                     <label class="form-check-label" for="defaultCheck1">
                         Dark Mode
                     </label>
-                </div>
+                </div>-->
             </div>
             <div id="lista" class="col-6">
                 <div class="ui list list-group" style="user-select: none">
                     </div>
             </div>
-        </div>
     </div>
     <script src="script.js"></script>
 </body>
