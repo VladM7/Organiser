@@ -4,6 +4,8 @@ TODO change list appearance
 TODO modify ui structure
 */
 
+const { ipcRenderer } = require("electron");
+
 var colors = [
   /*background*/
   "#FFFFFF",
@@ -29,6 +31,19 @@ document.onkeyup = (keyUpEvent) => {
   isKeyPressed[keyDownEvent.key] = false;
 };
 
+/* $("#errorButton").click(() => {
+  ipc.send('open-error-dialog');
+}); */
+
+/* 
+prints "pong"
+console.log(ipcRenderer.sendSync("synchronous-message", "ping"));
+
+prints "pong"
+ipcRenderer.on("asynchronous-reply", (_, ...args) => console.log(...args));
+
+ipcRenderer.send("asynchronous-message", "ping"); */
+
 function addtask() {
   if ($("#newTask").val().trim() != "") {
     $(".list-group").append(
@@ -37,6 +52,8 @@ function addtask() {
         $("#newTask").val() +
         `<div class="ui divider"></div></div>`
     );
+    /* let taskvalue = $("#newTask").val();
+    ipcRenderer.send("introduced-task", taskvalue); */
     $("#newTask").val("");
 
     if ($(".important").is(":checked") == 1)
@@ -49,6 +66,19 @@ function addtask() {
     $(".importantItems").css("background-color", "#ffb0b0");
   }
 }
+
+function clearAll() {
+  $(".list-group")
+    .children()
+    .fadeOut("normal", function () {
+      $(".list-group").children().remove();
+    });
+}
+
+ipcRenderer.on("clear-all", (event) => {
+  clearAll();
+  console.log("cyka");
+});
 
 $("#addTask").click(() => {
   addtask();
@@ -91,11 +121,7 @@ $("#darkMode").on("change", function () {
 });
 
 $("#clearAll").click(() => {
-  $(".list-group")
-    .children()
-    .fadeOut("normal", function () {
-      $(".list-group").children().remove();
-    });
+  clearAll();
 });
 
 $(document).on("mouseenter", ".item", function () {
