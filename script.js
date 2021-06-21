@@ -1,9 +1,3 @@
-/*
-TODO change semantic ui button colors when in dark mode
-TODO change list appearance
-TODO modify ui structure
-*/
-
 const { ipcRenderer } = require("electron");
 
 var colors = [
@@ -16,20 +10,12 @@ var colors = [
 ];
 var activeMode = 0;
 
-var isKeyPressed = {
-  Enter: false,
-};
-document.onkeydown = (keyDownEvent) => {
-  isKeyPressed[keyDownEvent.key] = true;
-  if (isKeyPressed["Enter"]) {
-    addtask();
-    isKeyPressed[keyDownEvent.key] = false;
-    isKeyPressed["Enter"] = false;
+$(document).keyup(function (event) {
+  if (event.which === 13) {
+    addtask($("#newTask").val());
+    $("#newTask").val("");
   }
-};
-document.onkeyup = (keyUpEvent) => {
-  isKeyPressed[keyDownEvent.key] = false;
-};
+});
 
 /* $("#errorButton").click(() => {
   ipc.send('open-error-dialog');
@@ -44,26 +30,23 @@ ipcRenderer.on("asynchronous-reply", (_, ...args) => console.log(...args));
 
 ipcRenderer.send("asynchronous-message", "ping"); */
 
-function addtask() {
-  if ($("#newTask").val().trim() != "") {
+function addtask(data) {
+  if (data.trim() != "") {
     $(".list-group").append(
       `<div class="item"><i class="far fa-circle"></i>` +
         "\xa0\xa0\xa0\xa0" +
-        $("#newTask").val() +
+        data +
         `<div class="ui divider"></div></div>`
     );
-    /* let taskvalue = $("#newTask").val();
-    ipcRenderer.send("introduced-task", taskvalue); */
-    $("#newTask").val("");
 
-    if ($(".important").is(":checked") == 1)
+    /* if ($(".important").is(":checked") == 1)
       $(".item").last().addClass("importantItems");
     if (activeMode == 1) {
       $(".item").last().css("color", colors[0]);
       $(".item").last().css("background-color", colors[2]);
     }
     $(".list-group-item").css("background-color", currentListColor);
-    $(".importantItems").css("background-color", "#ffb0b0");
+    $(".importantItems").css("background-color", "#ffb0b0"); */
   }
 }
 
@@ -77,11 +60,12 @@ function clearAll() {
 
 ipcRenderer.on("clear-all", (event) => {
   clearAll();
-  console.log("cyka");
+  //console.log("cleared all");
 });
 
-$("#addTask").click(() => {
-  addtask();
+$("#addTask").on("click", () => {
+  addtask($("#newTask").val());
+  $("#newTask").val("");
 });
 
 /*
@@ -120,7 +104,7 @@ $("#darkMode").on("change", function () {
   }
 });
 
-$("#clearAll").click(() => {
+$("#clearAll").on("click", () => {
   clearAll();
 });
 
