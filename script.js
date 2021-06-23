@@ -1,4 +1,9 @@
 const { ipcRenderer } = require("electron");
+const fs = require("fs");
+const path = require("path");
+
+let pathName = path.join(__dirname, "Files/saved.txt");
+let currentText = "";
 
 var colors = [
   /*background*/
@@ -10,12 +15,21 @@ var colors = [
 ];
 var activeMode = 0;
 
-$(document).keyup(function (event) {
-  if (event.which === 13) {
-    addtask($("#newTask").val());
-    $("#newTask").val("");
+function init() {
+  var array = fs.readFileSync(pathName).toString().split("\n");
+  for (i in array) {
+    addtask(array[i], 0);
+    console.log(array[i]);
   }
-});
+}
+
+const removeLines = (data, lines = []) => {
+  data += "";
+  return data
+    .split("\n")
+    .filter((val, idx) => lines.indexOf(idx) === -1)
+    .join("\n");
+};
 
 /* $("#errorButton").click(() => {
   ipc.send('open-error-dialog');
@@ -30,12 +44,12 @@ ipcRenderer.on("asynchronous-reply", (_, ...args) => console.log(...args));
 
 ipcRenderer.send("asynchronous-message", "ping"); */
 
-function addtask(data) {
-  if (data.trim() != "") {
+function addtask(textData, appendData) {
+  if (textData.trim() != "") {
     $(".list-group").append(
       `<div class="item"><i class="far fa-circle"></i>` +
         "\xa0\xa0\xa0\xa0" +
-        data +
+        textData +
         `<div class="ui divider"></div></div>`
     );
 
@@ -47,6 +61,22 @@ function addtask(data) {
     }
     $(".list-group-item").css("background-color", currentListColor);
     $(".importantItems").css("background-color", "#ffb0b0"); */
+
+    /* let enter = "";
+    var data = fs.readFile(pathName);
+    currentText = data;
+    if (currentText == "") enter = "";
+    else enter = "\n";
+    fs.writeFile(pathName, currentText + enter + textData, (err) => {
+      if (err) return console.log("Error creating the task");
+    }); */
+    if (appendData == 1) {
+      fs.appendFile(pathName, "\n" + textData + "\n", function (err) {
+        if (err) throw err;
+        console.log("Saved!");
+      });
+    }
+    $("#newTask").val("");
   }
 }
 
@@ -58,14 +88,21 @@ function clearAll() {
     });
 }
 
+$(document).keyup(function (event) {
+  if (event.which === 13) {
+    addtask($("#newTask").val(), 1);
+    $("#newTask").val("");
+  }
+});
+
 ipcRenderer.on("clear-all", (event) => {
   clearAll();
   //console.log("cleared all");
 });
 
 $("#addTask").on("click", () => {
-  addtask($("#newTask").val());
-  $("#newTask").val("");
+  let taskText = $("#newTask").val();
+  addtask(taskText, 1);
 });
 
 /*
@@ -123,9 +160,27 @@ $(document).on("mouseleave", ".item", function () {
 
 $(document).on("click", ".item", function () {
   //$(this).css("text-decoration", "line-through");
+  /* var fileContents = fs.readFileSync(pathName).toString().split("\n");
+  var lineNumber = fileContents.indexOf(
+    $(this).text().replace("\xa0", "").trim()
+  ); */
+  currentText = fs.readFileSync(pathName).toString();
+  //console.log($(this).text().replace("\xa0", "").trim() + "  " + currentText);
+  currentText = currentText.replace(
+    "\n" + $(this).text().replace("\xa0", "").trim() + "\n",
+    ""
+  );
+  fs.writeFileSync(pathName, currentText, function (err) {
+    if (err) return console.log("Error deleting task");
+  });
+
   $(this).children("i").remove();
   $(this).prepend(`<i class="far fa-times-circle"></i>`);
   $(this).fadeOut("slow", function () {
     $(this).remove();
   });
+});
+
+$(function () {
+  init();
 });
