@@ -1,8 +1,53 @@
-#title1{
-    margin-left: 25px;
-    margin-top: 5px;
+#title1 {
+  margin-left: 25px;
+  margin-top: 5px;
 }
 
-.container{
-    margin-left: 15px;
+.container {
+  padding: 40px;
+}
+
+.lightgray::placeholder {
+  color: #bdbdbd;
+  opacity: 1;
+}
+
+.lightgray:-ms-input-placeholder {
+  color: #bdbdbd;
+}
+
+.lightgray::-ms-input-placeholder {
+  color: #bdbdbd;
+}
+
+.menu {
+  position: fixed;
+  bottom: 10px;
+  font-size: 0px;
+  margin: -9px;
+  padding: 0px;
+  background-color: white;
+  width: 100%;
+}
+
+#newTask {
+  width: 800px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+#clearAll {
+  height: 50px;
+}
+
+.item {
+  font-size: 16px;
+}
+
+.try {
+  display: inline-block;
+  height: 50px;
+  font-size: 0px;
+  margin: 0px;
+  padding: 0px;
 }

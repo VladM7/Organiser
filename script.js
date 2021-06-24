@@ -1,74 +1,167 @@
-var currentListColor = "#FFFFFF";
+const { ipcRenderer } = require("electron");
+const fs = require("fs");
+const path = require("path");
 
-var isKeyPressed = {
-  'Enter': false
-}
-document.onkeydown = (keyDownEvent) => {
-  isKeyPressed[keyDownEvent.key] = true;
-  if (isKeyPressed["Enter"]) {
-    addtask();
-    isKeyPressed[keyDownEvent.key] = false;
+let pathName = path.join(__dirname, "Files/saved.txt");
+let currentText = "";
+
+var colors = [
+  /*background*/
+  "#FFFFFF",
+  "#353B40",
+  "#5E6366",
+  /*text*/
+  "#000000",
+];
+var activeMode = 0;
+
+function init() {
+  var array = fs.readFileSync(pathName).toString().split("\n");
+  for (i in array) {
+    addtask(array[i], 0);
+    console.log(array[i]);
   }
 }
-document.onkeyup = (keyUpEvent) => {
-  isKeyPressed[keyDownEvent.key] = false;
-}
 
-function addtask() {
-  if ($("#newTask").val() != "") {
-    $(".list-group").append(`<li class="list-group-item"><i class="far fa-circle"></i>` + "\xa0\xa0\xa0\xa0" + $("#newTask").val() + `</li>`);
-    $("#newTask").val("");
+const removeLines = (data, lines = []) => {
+  data += "";
+  return data
+    .split("\n")
+    .filter((val, idx) => lines.indexOf(idx) === -1)
+    .join("\n");
+};
 
-    if ($('.important').is(':checked') == 1)
-      $("li").last().addClass("importantItems");
+/* $("#errorButton").click(() => {
+  ipc.send('open-error-dialog');
+}); */
 
+/* 
+prints "pong"
+console.log(ipcRenderer.sendSync("synchronous-message", "ping"));
+
+prints "pong"
+ipcRenderer.on("asynchronous-reply", (_, ...args) => console.log(...args));
+
+ipcRenderer.send("asynchronous-message", "ping"); */
+
+function addtask(textData, appendData) {
+  if (textData.trim() != "") {
+    $(".list-group").append(
+      `<div class="item"><i class="far fa-circle"></i>` +
+        "\xa0\xa0\xa0\xa0" +
+        textData +
+        `<div class="ui divider"></div></div>`
+    );
+
+    /* if ($(".important").is(":checked") == 1)
+      $(".item").last().addClass("importantItems");
+    if (activeMode == 1) {
+      $(".item").last().css("color", colors[0]);
+      $(".item").last().css("background-color", colors[2]);
+    }
     $(".list-group-item").css("background-color", currentListColor);
-    $(".importantItems").css("background-color", "#ffb0b0");
+    $(".importantItems").css("background-color", "#ffb0b0"); */
+
+    /* let enter = "";
+    var data = fs.readFile(pathName);
+    currentText = data;
+    if (currentText == "") enter = "";
+    else enter = "\n";
+    fs.writeFile(pathName, currentText + enter + textData, (err) => {
+      if (err) return console.log("Error creating the task");
+    }); */
+    if (appendData == 1) {
+      fs.appendFile(pathName, "\n" + textData + "\n", function (err) {
+        if (err) throw err;
+        console.log("Saved!");
+      });
+    }
+    $("#newTask").val("");
   }
 }
 
-$("#addTask").click(() => {
-  addtask();
-})
-
-$("#changeColor").click(() => {
-  var randomColor1 = '#' + Math.floor(Math.random() * 16777215).toString(16);
-  $("body").css("background-color", randomColor1);
-
-  var randomColor2 = '#' + Math.floor(Math.random() * 16777215).toString(16);
-  $(".list-group-item").css("background-color", randomColor2);
-  $(".importantItems").css("background-color", "#eb5b5b");
-  $("#newTask").css("background-color", randomColor2);
-
-  currentListColor = randomColor2;
-})
-
-$("#clearAll").click(() => {
-  $("#list").children().fadeOut("normal", function () {
-    $("#list").children().remove();
+function clearAll() {
+  currentText = "";
+  fs.writeFile(pathName, currentText, function (err) {
+    if (err) throw err;
+    console.log("Deleted all");
   });
-})
+  $(".list-group")
+    .children()
+    .fadeOut("normal", function () {
+      $(".list-group").children().remove();
+    });
+}
 
+$(function () {
+  init();
+  $("#addTask").on("click", () => {
+    let taskText = $("#newTask").val();
+    addtask(taskText, 1);
+  });
+  $(document).keyup(function (event) {
+    if (event.which === 13) {
+      addtask($("#newTask").val(), 1);
+      $("#newTask").val("");
+    }
+  });
+  $(document).on("click", ".item", function () {
+    //$(this).css("text-decoration", "line-through");
+    /* var fileContents = fs.readFileSync(pathName).toString().split("\n");
+    var lineNumber = fileContents.indexOf(
+      $(this).text().replace("\xa0", "").trim()
+    ); */
+    currentText = fs.readFileSync(pathName).toString();
+    //console.log($(this).text().replace("\xa0", "").trim() + "  " + currentText);
+    currentText = currentText.replace(
+      "\n" + $(this).text().replace("\xa0", "").trim() + "\n",
+      ""
+    );
+    fs.writeFileSync(pathName, currentText, function (err) {
+      if (err) return console.log("Error deleting task");
+    });
 
-$(document).on('mouseenter', 'li', function () {
-  //$(this).css("text-decoration", "line-through");
+    $(this).children("i").remove();
+    $(this).prepend(`<i class="far fa-times-circle"></i>`);
+    $(this).fadeOut("slow", function () {
+      $(this).remove();
+    });
+  });
+  $(document).on("mouseenter", ".item", function () {
+    //$(this).css("text-decoration", "line-through");
 
-  $(this).children().remove();
-  $(this).prepend(`<i class="far fa-times-circle"></i>`);
-});
-$(document).on('mouseleave', 'li', function () {
-  //$(this).css("text-decoration", "none");
+    $(this).children("i").remove();
+    $(this).prepend(`<i class="far fa-times-circle"></i>`);
+  });
+  $(document).on("mouseleave", ".item", function () {
+    //$(this).css("text-decoration", "none");
 
-  $(this).children().remove();
-  $(this).prepend(`<i class="far fa-circle"></i>`);
-});
-
-
-$(document).on('click', 'li', function () {
-  //$(this).css("text-decoration", "line-through");
-  $(this).children().remove();
-  $(this).prepend(`<i class="far fa-times-circle"></i>`);
-  $(this).fadeOut("slow", function () {
-    $(this).remove();
+    $(this).children("i").remove();
+    $(this).prepend(`<i class="far fa-circle"></i>`);
+  });
+  ipcRenderer.on("clear-all", (event) => {
+    clearAll();
+    //console.log("cleared all");
+  });
+  $("#darkMode").on("change", function () {
+    if ($("#darkMode").is(":checked")) {
+      activeMode = 1;
+      $("body").css("background-color", colors[1]);
+      $("body").css("color", colors[0]);
+      $("#newTask").css("background-color", colors[2]);
+      $(".item").css("color", colors[0]);
+      $(".item").css("background-color", colors[2]);
+      $("#newTask").addClass("lightgray");
+      $("#newTask").css("color", colors[0]);
+    } else if ($("#darkMode").is(":not(:checked)")) {
+      activeMode = 0;
+      $("body").css("background-color", colors[0]);
+      $("body").css("color", colors[3]);
+      $("#newTask").css("background-color", colors[0]);
+      $(".item").css("background-color", colors[0]);
+      $(".item").css("color", colors[3]);
+      $("#newTask").removeClass("lightgray");
+      $("#newTask").css("color", colors[3]);
+    }
   });
 });

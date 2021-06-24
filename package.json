@@ -35,5 +35,8 @@
   "bugs": {
     "url": "https://github.com/VladM7/Test/issues"
   },
-  "homepage": "https://github.com/VladM7/Test#readme"
+  "homepage": "https://github.com/VladM7/Test#readme",
+  "dependencies": {
+    "jquery": "^3.6.0"
+  }
 }
