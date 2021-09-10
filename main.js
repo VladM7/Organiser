@@ -18,7 +18,7 @@ app.on("ready", function () {
       nativeWindowOpen: true,
     },
   });
-  win.loadFile(path.join(__dirname, "index.html"));
+  win.loadFile(path.join(__dirname, "src/index.html"));
   /* ipcMain.on("asynchronous-message", (event, arg) => {
     console.log(arg); // prints "ping"
     event.sender.send("asynchronous-reply", "pong");

@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-let pathName = path.join(__dirname, "src/saved.txt");
+let pathName = path.join(__dirname, "saved.txt");
 let currentText = "";
 
 var colors = [
