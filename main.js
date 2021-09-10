@@ -79,6 +79,14 @@ app.on("ready", function () {
     },
     {
       label: "Help",
+      submenu: [
+        {
+          label: "Shortcuts",
+        },
+        {
+          label: "About",
+        },
+      ],
     },
   ];
 
