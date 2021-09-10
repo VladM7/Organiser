@@ -52,7 +52,21 @@ app.on("ready", function () {
         },
         {
           label: "Preferences",
-          click: function () {},
+          click: () => {
+            const preferences = new BrowserWindow({
+              width: 600,
+              height: 400,
+              icon: path.join(__dirname, "assets/to-do-list.ico"),
+              webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+                nativeWindowOpen: true,
+              },
+            });
+            preferences.setMenu(null);
+
+            preferences.loadFile(path.join(__dirname, "src/preferences.html"));
+          },
         },
       ],
     },

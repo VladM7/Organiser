@@ -13,7 +13,7 @@ var colors = [
   /*text*/
   "#000000",
 ];
-var activeMode = 0;
+// var activeMode = 0;
 
 function init() {
   var array = fs.readFileSync(pathName).toString().split("\n");
