@@ -5,9 +5,9 @@
   "license": "MIT",
   "main": "main.js",
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.54",
-    "electron": "^14.0.0",
-    "electron-builder": "^22.11.1"
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "electron": "^14.0.1",
+    "electron-builder": "^22.11.7"
   },
   "scripts": {
     "postinstall": "install-app-deps",

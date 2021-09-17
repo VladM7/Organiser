@@ -1,9 +1,6 @@
-import { Observable } from '../Observable';
-import { Operator } from '../Operator';
-import { Subscriber } from '../Subscriber';
-import { Subscription } from '../Subscription';
-import { Notification } from '../Notification';
-import { MonoTypeOperatorFunction, PartialObserver, SchedulerAction, SchedulerLike, TeardownLogic } from '../types';
+import { MonoTypeOperatorFunction, SchedulerLike } from '../types';
+import { operate } from '../util/lift';
+import { OperatorSubscriber } from './OperatorSubscriber';
 
 /**
  *
@@ -32,11 +29,14 @@ import { MonoTypeOperatorFunction, PartialObserver, SchedulerAction, SchedulerLi
  * for notification emissions in general.
  *
  * ## Example
+ *
  * Ensure values in subscribe are called just before browser repaint.
+ *
  * ```ts
- * import { interval } from 'rxjs';
+ * import { interval, animationFrameScheduler } from 'rxjs';
  * import { observeOn } from 'rxjs/operators';
  *
+ * const someDiv = document.querySelector("#someDiv");
  * const intervals = interval(10);                // Intervals are scheduled
  *                                                // with async scheduler by default...
  * intervals.pipe(
@@ -51,72 +51,18 @@ import { MonoTypeOperatorFunction, PartialObserver, SchedulerAction, SchedulerLi
  *
  * @param {SchedulerLike} scheduler Scheduler that will be used to reschedule notifications from source Observable.
  * @param {number} [delay] Number of milliseconds that states with what delay every notification should be rescheduled.
- * @return {Observable<T>} Observable that emits the same notifications as the source Observable,
- * but with provided scheduler.
- *
- * @method observeOn
- * @owner Observable
+ * @return A function that returns an Observable that emits the same
+ * notifications as the source Observable, but with provided scheduler.
  */
 export function observeOn<T>(scheduler: SchedulerLike, delay: number = 0): MonoTypeOperatorFunction<T> {
-  return function observeOnOperatorFunction(source: Observable<T>): Observable<T> {
-    return source.lift(new ObserveOnOperator(scheduler, delay));
-  };
-}
-
-export class ObserveOnOperator<T> implements Operator<T, T> {
-  constructor(private scheduler: SchedulerLike, private delay: number = 0) {
-  }
-
-  call(subscriber: Subscriber<T>, source: any): TeardownLogic {
-    return source.subscribe(new ObserveOnSubscriber(subscriber, this.scheduler, this.delay));
-  }
-}
-
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-export class ObserveOnSubscriber<T> extends Subscriber<T> {
-  /** @nocollapse */
-  static dispatch(this: SchedulerAction<ObserveOnMessage>, arg: ObserveOnMessage) {
-    const { notification, destination } = arg;
-    notification.observe(destination);
-    this.unsubscribe();
-  }
-
-  constructor(destination: Subscriber<T>,
-              private scheduler: SchedulerLike,
-              private delay: number = 0) {
-    super(destination);
-  }
-
-  private scheduleMessage(notification: Notification<any>): void {
-    const destination = this.destination as Subscription;
-    destination.add(this.scheduler.schedule(
-      ObserveOnSubscriber.dispatch,
-      this.delay,
-      new ObserveOnMessage(notification, this.destination)
-    ));
-  }
-
-  protected _next(value: T): void {
-    this.scheduleMessage(Notification.createNext(value));
-  }
-
-  protected _error(err: any): void {
-    this.scheduleMessage(Notification.createError(err));
-    this.unsubscribe();
-  }
-
-  protected _complete(): void {
-    this.scheduleMessage(Notification.createComplete());
-    this.unsubscribe();
-  }
-}
-
-export class ObserveOnMessage {
-  constructor(public notification: Notification<any>,
-              public destination: PartialObserver<any>) {
-  }
+  return operate((source, subscriber) => {
+    source.subscribe(
+      new OperatorSubscriber(
+        subscriber,
+        (value) => subscriber.add(scheduler.schedule(() => subscriber.next(value), delay)),
+        () => subscriber.add(scheduler.schedule(() => subscriber.complete(), delay)),
+        (err) => subscriber.add(scheduler.schedule(() => subscriber.error(err), delay))
+      )
+    );
+  });
 }

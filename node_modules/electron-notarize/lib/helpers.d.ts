@@ -10,3 +10,4 @@ export interface NotarizationInfo {
     statusMessage?: string;
 }
 export declare function parseNotarizationInfo(info: string): NotarizationInfo;
+export declare function delay(ms: number): Promise<void>;
