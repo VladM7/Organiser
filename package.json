@@ -1,13 +1,13 @@
 {
   "name": "to-do-app",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "author": "GoodTasks",
   "license": "MIT",
   "main": "main.js",
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.54",
-    "electron": "^13.0.1",
-    "electron-builder": "^22.11.1"
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "electron": "^14.0.1",
+    "electron-builder": "^22.11.7"
   },
   "scripts": {
     "postinstall": "install-app-deps",

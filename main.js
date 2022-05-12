@@ -11,12 +11,14 @@ app.on("ready", function () {
   win = new BrowserWindow({
     width: 1000,
     height: 800,
+    icon: path.join(__dirname, "assets/to-do-list.ico"),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      nativeWindowOpen: true,
     },
   });
-  win.loadFile(path.join(__dirname, "index.html"));
+  win.loadFile(path.join(__dirname, "src/index.html"));
   /* ipcMain.on("asynchronous-message", (event, arg) => {
     console.log(arg); // prints "ping"
     event.sender.send("asynchronous-reply", "pong");
@@ -33,6 +35,11 @@ app.on("ready", function () {
   const template = [
     {
       label: "File",
+      submenu: [
+        {
+          label: "New List",
+        },
+      ],
     },
     {
       label: "Edit",
@@ -45,7 +52,21 @@ app.on("ready", function () {
         },
         {
           label: "Preferences",
-          click: function () {},
+          click: () => {
+            const preferences = new BrowserWindow({
+              width: 600,
+              height: 400,
+              icon: path.join(__dirname, "assets/to-do-list.ico"),
+              webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+                nativeWindowOpen: true,
+              },
+            });
+            preferences.setMenu(null);
+
+            preferences.loadFile(path.join(__dirname, "src/preferences.html"));
+          },
         },
       ],
     },
@@ -79,6 +100,30 @@ app.on("ready", function () {
     },
     {
       label: "Help",
+      submenu: [
+        {
+          label: "Shortcuts",
+        },
+        {
+          label: "About",
+          click: () => {
+            const about = new BrowserWindow({
+              width: 600,
+              height: 400,
+              icon: path.join(__dirname, "assets/to-do-list.ico"),
+              webPreferences: {
+                preload: path.join(__dirname, "preload.js"),
+                nodeIntegration: true,
+                contextIsolation: false,
+                nativeWindowOpen: true,
+              },
+            });
+            about.setMenu(null);
+
+            about.loadFile(path.join(__dirname, "src/about.html"));
+          },
+        },
+      ],
     },
   ];
 
