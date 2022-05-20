@@ -36,6 +36,27 @@
   border-radius: 5px;
 }
 
+#editTask {
+  height: 25px;
+  width: 400px;
+  font-size: 16px;
+  border-radius: 20px;
+  margin-left: 10px;
+}
+
+#editDate {
+  height: 25px;
+  width: 210px;
+  font-size: 16px;
+  border-radius: 20px;
+  margin-left: 80%;
+}
+
+#additemtest {
+  height: 40px;
+  margin-left: 20%;
+}
+
 #clearAll {
   height: 50px;
 }

@@ -51,6 +51,12 @@ app.on("ready", function () {
           },
         },
         {
+          label: "Reset progress",
+          click: function () {
+            win.webContents.send("reset-progress");
+          },
+        },
+        {
           label: "Preferences",
           click: () => {
             const preferences = new BrowserWindow({
