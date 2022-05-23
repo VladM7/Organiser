@@ -1,0 +1,22 @@
+.container {
+  padding: 4%;
+}
+
+.checkbox {
+  padding: 1%;
+}
+
+#obs {
+  font-size: 16px;
+  font-weight: normal;
+  font-style: italic;
+}
+
+.aboutIcon {
+  float: right;
+}
+
+.aboutIcon,
+h1 {
+  display: inline;
+}

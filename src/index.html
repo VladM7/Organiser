@@ -17,7 +17,7 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">-->
   <link rel="stylesheet" href="index.css" />
   <script src="https://kit.fontawesome.com/969da79902.js" crossorigin="anonymous"></script>
-  <title>To Do</title>
+  <title>Organiser</title>
 </head>
 
 <body>
@@ -26,6 +26,22 @@
     <i></i>
     <br>-->
   <div class="container">
+    <div class="weekdayText">[err]</div>
+    <div class="ui mini right floated statistic nrTasksLeft" title="Number of tasks left to complete">
+      <div class="value">
+        <i class="tasks icon"></i>
+        NaN
+      </div>
+    </div>
+    <i class="chart bar large icon chartsButton" title="Open Charts View"></i>
+    <i class="calendar large icon calendarButton" title="Open Calendar View"></i>
+    <div class="ui indicating progress" id="topProgressbar">
+      <div class="bar">
+        <!-- <div class="progress"></div> -->
+      </div>
+      <!-- <div class="label">Progress</div> -->
+    </div>
+    <br>
     <!-- <button id="errorButton">Click me!</button> -->
     <div class="menu">
       <div class="ui search try">
@@ -38,7 +54,7 @@
                     * add left icon to class when decomment
                     <i class="plus icon" style="user-select: none"></i>
             -->
-          <input class="prompt try" id="newTask" placeholder="Enter New Task" />
+          <input class="prompt try" id="newTask" placeholder="Enter New Item" />
         </div>
         <!-- <button type="button" class="ui labeled icon button" id="clearAll">
             <i class="eraser icon"></i>

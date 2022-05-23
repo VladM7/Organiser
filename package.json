@@ -1,31 +1,38 @@
 {
-  "name": "to-do-app",
-  "version": "0.3.0",
-  "author": "GoodTasks",
+  "name": "organiser-app",
+  "version": "0.5.0",
+  "author": "Manea Vlad & Butu Radu",
+  "icon": "assets/icon.ico",
   "license": "MIT",
   "main": "main.js",
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.61",
-    "electron": "^14.0.1",
-    "electron-builder": "^22.11.7"
+    "electron": "^18.2.4",
+    "electron-builder": "^23.0.3"
   },
   "scripts": {
-    "postinstall": "install-app-deps",
-    "start": "electron .",
-    "pack": "build --dir",
-    "dist": "electron-builder"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps",
+    "start": "electron ."
   },
   "build": {
     "appId": "com.tasks.app",
-    "productName": "To Do Lists, Inc.",
+    "productName": "Organiser",
+    "icon": "build/icon.ico",
     "target": "NSIS",
     "directories": {
       "buildResources": "build"
     },
     "nsis": {
+      "installerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
       "allowToChangeInstallationDirectory": true,
       "oneClick": false
-    }
+    },
+    "extraFiles": [
+      "build",
+      "config"
+    ]
   },
   "description": "A simple task management app.",
   "repository": {
@@ -37,6 +44,10 @@
   },
   "homepage": "https://github.com/VladM7/Test#readme",
   "dependencies": {
+    "auto-launch": "^5.0.5",
+    "chart.js": "^3.7.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "fullcalendar": "^5.11.0",
     "jquery": "^3.6.0"
   }
 }

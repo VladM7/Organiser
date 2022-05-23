@@ -6,7 +6,7 @@
  * import async_hooks from 'async_hooks';
  * ```
  * @experimental
- * @see [source](https://github.com/nodejs/node/blob/v16.7.0/lib/async_hooks.js)
+ * @see [source](https://github.com/nodejs/node/blob/v16.9.0/lib/async_hooks.js)
  */
 declare module 'async_hooks' {
     /**
@@ -258,7 +258,7 @@ declare module 'async_hooks' {
          * @param type The type of async event.
          * @param triggerAsyncId The ID of the execution context that created
          *   this async event (default: `executionAsyncId()`), or an
-         *   AsyncResourceOptions object (since 9.3)
+         *   AsyncResourceOptions object (since v9.3.0)
          */
         constructor(type: string, triggerAsyncId?: number | AsyncResourceOptions);
         /**

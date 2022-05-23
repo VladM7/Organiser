@@ -1,0 +1,18 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.tasks.app
+productName: Organiser
+icon: build/icon.ico
+target: NSIS
+nsis:
+  installerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico
+  allowToChangeInstallationDirectory: true
+  oneClick: false
+extraFiles:
+  - filter:
+      - build
+      - config
+files: []
+electronVersion: 18.2.4
