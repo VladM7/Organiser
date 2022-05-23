@@ -2,15 +2,15 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-let pathName = path.join(__dirname, "saved.txt");
+const execPath = "C:/Files/Electron/To_Do/"; //path.dirname(process.execPath); //
 let nrTasks = 0,
   clearedTasks = 0,
   totalTasks = 0,
   editMode = 0;
 
 var colors = [
-  /*background*/
-  "#FFFFFF",
+  "#ffffff", //white
+  "#1a1a1a", //bg
   "#353B40",
   "#5E6366",
   /*text*/
@@ -27,13 +27,19 @@ var colors = [
 } */
 
 function init_json() {
-  var rawData = fs.readFileSync("src/test.json");
+  var rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   var structuredData = JSON.parse(rawData);
   for (i in structuredData) {
     show_items(structuredData[i].text);
     nrTasks++;
   }
   totalTasks = nrTasks;
+
+  //* variables JSON
+  var rawData = fs.readFileSync(path.join(execPath, "/config/variables.json"));
+  var structuredData = JSON.parse(rawData);
+  clearedTasks = structuredData.completedItems;
+  totalTasks = structuredData.totalItems;
 }
 
 /* const removeLines = (data, lines = []) => {
@@ -85,7 +91,7 @@ function show_items(textData) {
     `<div class="item"><i class="listicon far fa-circle"></i>` +
       "\xa0\xa0\xa0\xa0" +
       textData +
-      `<div class="ui divider"></div></div>`
+      `<i class="editIcon pencil alternate icon"></i><div class="ui divider"></div></div>`
   );
 }
 
@@ -94,16 +100,28 @@ function additem_json(textData) {
   show_items(textData);
 
   //* JSON
-  let rawData = fs.readFileSync("src/test.json");
+  let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   let structuredData = JSON.parse(rawData);
   //console.log(word);
   let prototype = { text: textData };
   structuredData[nrTasks++] = prototype;
+
+  //* totaltasks JSON
   totalTasks++;
+  let rawData2 = fs.readFileSync(path.join(execPath, "/config/variables.json"));
+  let structuredData2 = JSON.parse(rawData2);
+  structuredData2.totalItems = totalTasks;
+  fs.writeFileSync(
+    path.join(execPath, "/config/variables.json"),
+    JSON.stringify(structuredData2, null, 2)
+  );
   //structuredData[word + nrTasks]["fav"] = textData;
 
   console.log(structuredData);
-  fs.writeFileSync("src/test.json", JSON.stringify(structuredData, null, 2));
+  fs.writeFileSync(
+    path.join(execPath, "/config/items.json"),
+    JSON.stringify(structuredData, null, 2)
+  );
 
   // Reset HTML
   $("#newTask").val("");
@@ -115,11 +133,14 @@ function additem_json(textData) {
 
 function clearAll() {
   //* JSON
-  let rawData = fs.readFileSync("src/test.json");
+  let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   let structuredData = JSON.parse(rawData);
   structuredData.splice(0, nrTasks);
   console.log(structuredData[0]);
-  fs.writeFileSync("src/test.json", JSON.stringify(structuredData, null, 2));
+  fs.writeFileSync(
+    path.join(execPath, "/config/items.json"),
+    JSON.stringify(structuredData, null, 2)
+  );
   nrTasks = 0;
 
   //* HTML
@@ -132,7 +153,7 @@ function clearAll() {
 
 function clear_item(item) {
   //* JSON
-  let rawData = fs.readFileSync("src/test.json");
+  let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   let structuredData = JSON.parse(rawData);
   jQuery(structuredData).each(function (i) {
     //console.log(structuredData[i].text);
@@ -141,7 +162,10 @@ function clear_item(item) {
       return false;
     }
   });
-  fs.writeFileSync("src/test.json", JSON.stringify(structuredData, null, 2));
+  fs.writeFileSync(
+    path.join(execPath, "/config/items.json"),
+    JSON.stringify(structuredData, null, 2)
+  );
   nrTasks--;
   clearedTasks++;
 
@@ -151,6 +175,15 @@ function clear_item(item) {
   item.fadeOut("slow", function () {
     item.remove();
   });
+
+  //* crearedTasks JSON
+  rawData = fs.readFileSync(path.join(execPath, "/config/variables.json"));
+  structuredData = JSON.parse(rawData);
+  structuredData.completedItems = clearedTasks;
+  fs.writeFileSync(
+    path.join(execPath, "/config/variables.json"),
+    JSON.stringify(structuredData, null, 2)
+  );
 
   //* UI
   progressbar();
@@ -174,32 +207,37 @@ function reset_edit_task(task, itemText) {
     `<i class="listicon far fa-circle"></i>` +
       "\xa0\xa0\xa0\xa0" +
       itemText +
-      `<div class="ui divider"></div></div>`
+      `<i class="editIcon pencil alternate icon"></i><div class="ui divider"></div></div>`
   );
 
   //* JSON
-  let rawData = fs.readFileSync("src/test.json");
+  let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   let structuredData = JSON.parse(rawData);
   //console.log(structuredData[pos]);
   structuredData[$(task).index()].text = itemText;
-  fs.writeFileSync("src/test.json", JSON.stringify(structuredData, null, 2));
+  fs.writeFileSync(
+    path.join(execPath, "/config/items.json"),
+    JSON.stringify(structuredData, null, 2)
+  );
   editMode = 0;
 }
 
 function show_due_date(item) {
   let position = $(item).index();
   //console.log("yyyyyyyyyyyyyyyyyyyy" + position);
-  let rawData = fs.readFileSync("src/test.json");
+  let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   let structuredData = JSON.parse(rawData);
   if (!structuredData[position].due_date) return;
   $("#editDate").val(
-    structuredData[position].due_date.month +
-      "/" +
-      structuredData[position].due_date.day +
-      "/" +
+    20 +
       structuredData[position].due_date.year +
-      " " +
-      structuredData[position].due_date.hour +
+      "-" +
+      structuredData[position].due_date.month +
+      "-" +
+      structuredData[position].due_date.day
+  );
+  $("#editTime").val(
+    structuredData[position].due_date.hour +
       ":" +
       structuredData[position].due_date.minute
   );
@@ -207,20 +245,28 @@ function show_due_date(item) {
 
 function set_due_date(item) {
   let position = $(item).index();
-  let textbox = $("#editDate").val();
-  if (!textbox) return;
+  let dateTextbox = $("#editDate").val();
+  let timeTextbox = $("#editTime").val();
+  console.log(timeTextbox);
   //console.log("yyyyyyyyyyyyyyyyyyyy" + textbox);
-  let rawData = fs.readFileSync("src/test.json");
+  let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   let structuredData = JSON.parse(rawData);
   if (!structuredData[position].due_date)
     structuredData[position].due_date = {};
-  structuredData[position].due_date.month = textbox[0] + textbox[1];
-  structuredData[position].due_date.day = textbox[3] + textbox[4];
-  structuredData[position].due_date.year = textbox[6] + textbox[7];
-
-  structuredData[position].due_date.hour = textbox[9] + textbox[10];
-  structuredData[position].due_date.minute = textbox[12] + textbox[13];
-  fs.writeFileSync("src/test.json", JSON.stringify(structuredData, null, 2));
+  if (dateTextbox) {
+    structuredData[position].due_date.month = dateTextbox[5] + dateTextbox[6];
+    structuredData[position].due_date.day = dateTextbox[8] + dateTextbox[9];
+    structuredData[position].due_date.year = dateTextbox[2] + dateTextbox[3];
+  }
+  if (timeTextbox) {
+    structuredData[position].due_date.hour = timeTextbox[0] + timeTextbox[1];
+    structuredData[position].due_date.minute = timeTextbox[3] + timeTextbox[4];
+  }
+  structuredData[position].notif = false;
+  fs.writeFileSync(
+    path.join(execPath, "/config/items.json"),
+    JSON.stringify(structuredData, null, 2)
+  );
 }
 
 function edit_task(item) {
@@ -234,7 +280,10 @@ function edit_task(item) {
     <div class="ui transparent input"><input class="editItem prompt try" id="editTask" value="` +
       item.text().trim() +
       `"/></div><div class="ui transparent input">
-      <input class="editItem dueDate prompt try" id="editDate" value="" placeholder="(due date)   mm/dd/yy hh:mm"/></div>
+      <input type="date" class="editItem dueDate prompt try" id="editDate" value=""
+      value="2022-07-22"
+       min="2022-01-01" max="2022-12-31"/><input type="time" id="editTime" name="appt"
+       min="00:00" max="24:00"/></div>
       <button type="button" class="ui button" id="additemtest">Enter</button>
     <div class="ui divider"></div>`
   );
@@ -245,7 +294,7 @@ function edit_task(item) {
 
 /* function find_position(itemText) {
   let pos = -1;
-  let rawData = fs.readFileSync("src/test.json");
+  let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   let structuredData = JSON.parse(rawData);
   jQuery(structuredData).each(function (i) {
     if (structuredData[i].text.trim() == itemText) {
@@ -255,26 +304,76 @@ function edit_task(item) {
     }
   });
   //console.log({ pos });
-  fs.writeFileSync("src/test.json", JSON.stringify(structuredData, null, 2));
+  fs.writeFileSync(path.join(execPath, "/config/items.json"), JSON.stringify(structuredData, null, 2));
   if (pos == -1) console.error("Error: Could not find the item to edit");
   return pos;
 }
 */
 
 function progressbar() {
+  let prog = (clearedTasks / totalTasks) * 100;
+  if (totalTasks == 0) prog = 0;
   $("#topProgressbar").progress({
-    percent: (clearedTasks / totalTasks) * 100,
+    percent: prog,
   });
 }
 
 function resetProgress() {
   clearedTasks = 0;
   totalTasks = nrTasks;
+
+  //* variables JSON
+  let rawData = fs.readFileSync(path.join(execPath, "/config/variables.json"));
+  let structuredData = JSON.parse(rawData);
+  structuredData.completedItems = 0;
+  structuredData.totalItems = 0;
+  fs.writeFileSync(
+    path.join(execPath, "/config/variables.json"),
+    JSON.stringify(structuredData, null, 2)
+  );
+
+  $("#topProgressbar").progress({
+    percent: 0,
+  });
+}
+
+function day_of_week() {
+  let day = new Date().getDay();
+  let day_name = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  day = day_name[day];
+  let prev_data = $(".weekdayText").text().trim();
+  //console.log(day + " " + prev_data);
+  if (day != prev_data) {
+    $(".weekdayText").text(day);
+  }
+}
+
+function init_settings() {
+  let rawData = fs.readFileSync(path.join(execPath, "/config/settings.json"));
+  let structuredData = JSON.parse(rawData);
+  if (structuredData.runBg == true) $("#runBgDiv").checkbox("check");
+  else $("#runBgDiv").checkbox("uncheck");
+  if (structuredData.runSt == true) $("#runStDiv").checkbox("check");
+  else $("#runStDiv").checkbox("uncheck");
+}
+
+function initialize() {
+  init_json();
   progressbar();
+  day_of_week();
+  init_settings();
 }
 
 $(function () {
-  init_json();
+  initialize();
   $("#additem").on("click", () => {
     let taskText = $("#newTask").val();
     additem_json(taskText);
@@ -288,13 +387,13 @@ $(function () {
   $(document).on("click", ".item", function () {
     if (!editMode) clear_item($(this));
   });
-  $(document).on("contextmenu", ".item", function () {
+  $(document).on("click", ".editIcon", function () {
     //console.log("right click");
     if (!editMode) {
-      var item = $(this);
-      console.log("ppppppppppppp" + item.html());
-      console.log($(this).html());
-      edit_task($(this));
+      var item = $(this).parent();
+      //console.log("ppppppppppppp" + item.html());
+      //console.log(item.html());
+      edit_task(item);
       $("#additemtest").on("click", () => {
         reset_edit_task(item, item.children("div").children("input").val());
       });
@@ -302,14 +401,14 @@ $(function () {
   });
   $(document).on("mouseenter", ".item", function () {
     //$(this).css("text-decoration", "line-through");
-    $(this).children("i").remove();
+    $(this).children(".listicon").remove();
     $(this).prepend(`<i class="listicon far fa-times-circle"></i>`);
     //$(this).html(`<i class="listicon far fa-times-circle"></i>`);
     //$(this).remove();
   });
   $(document).on("mouseleave", ".item", function () {
     //$(this).css("text-decoration", "none");
-    $(this).children("i").remove();
+    $(this).children(".listicon").remove();
     $(this).prepend(`<i class="listicon far fa-circle"></i>`);
     //$(this).html(`<i class="listicon far fa-circle"></i>`);
   });
@@ -344,6 +443,29 @@ $(function () {
     }
   });
 
+  //* settings
+  $("#runBg").on("change", function () {
+    //console.log("ok");
+    let rawData = fs.readFileSync(path.join(execPath, "/config/settings.json"));
+    let structuredData = JSON.parse(rawData);
+    if ($("#runBg").is(":checked")) structuredData.runBg = true;
+    else structuredData.runBg = false;
+    fs.writeFileSync(
+      path.join(execPath, "/config/settings.json"),
+      JSON.stringify(structuredData, null, 2)
+    );
+  });
+  $("#runSt").on("change", function () {
+    //console.log("ok");
+    let rawData = fs.readFileSync(path.join(execPath, "/config/settings.json"));
+    let structuredData = JSON.parse(rawData);
+    if ($("#runSt").is(":checked")) structuredData.runSt = true;
+    else structuredData.runSt = false;
+    fs.writeFileSync(
+      path.join(execPath, "/config/settings.json"),
+      JSON.stringify(structuredData, null, 2)
+    );
+  });
   //progressbar();
   //additem_json("lol");
 });

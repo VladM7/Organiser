@@ -26,7 +26,6 @@
   font-size: 0px;
   margin: -9px;
   padding: 0px;
-  background-color: white;
   width: 100%;
 }
 
@@ -46,15 +45,21 @@
 
 #editDate {
   height: 25px;
-  width: 210px;
   font-size: 16px;
-  border-radius: 20px;
-  margin-left: 80%;
+  margin-left: 50%;
+  margin-right: 5%;
+}
+
+#editTime {
+  height: 25px;
+  font-size: 16px;
+  margin-left: 10px;
+  margin-right: 5px;
 }
 
 #additemtest {
-  height: 40px;
-  margin-left: 20%;
+  height: 35px;
+  float: right;
 }
 
 #clearAll {
@@ -71,4 +76,14 @@
   font-size: 0px;
   margin: 0px;
   padding: 0px;
+}
+
+.weekdayText {
+  font-size: 30px;
+  font-weight: 1000;
+  padding-bottom: 2%;
+}
+
+.editIcon {
+  float: right;
 }
