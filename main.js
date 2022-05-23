@@ -10,7 +10,7 @@ const {
 let AutoLaunch = require("auto-launch");
 const fs = require("fs");
 const path = require("path");
-const execPath = "D:/Info/Java, Electron, etc/To_Do"; //path.dirname(process.execPath);
+const execPath = path.dirname(process.execPath); //"D:/Info/Java, Electron, etc/To_Do"; //
 
 let win = null;
 let tray;
@@ -146,13 +146,12 @@ app.on("ready", function () {
       label: "File",
       submenu: [
         {
-          label: "New List",
-        },
-        {
           label: "Send Test Notification",
           click: function () {
             if (Notification.isSupported()) {
-              let rawData = fs.readFileSync("config/notifications.json");
+              let rawData = fs.readFileSync(
+                path.join(execPath, "/config/notifications.json")
+              );
               let structuredData = JSON.parse(rawData);
               const notification = new Notification(structuredData);
               notification.show();

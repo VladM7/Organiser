@@ -11,7 +11,7 @@
         const fs = require("fs");
         const path = require("path");
 
-        const execPath = "D:/Info/Java, Electron, etc/To_Do"; //path.dirname(process.execPath); //"C:/Files/Electron/To_Do/"; // //
+        const execPath = path.dirname(process.execPath); //"D:/Info/Java, Electron, etc/To_Do"; //"C:/Files/Electron/To_Do/"; // //
 
         var rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
         var structuredData = JSON.parse(rawData);

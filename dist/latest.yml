@@ -1,8 +1,8 @@
 version: 0.5.0
 files:
   - url: Organiser-Setup-0.5.0.exe
-    sha512: kZ1SgLgUwAjR0gyvp8SGiYBi9sASL9m83XV/b2siOjLGq/bdDfj7dXig7SeVqXXV31JQz5+HddQTqYf9iJJT5g==
-    size: 63418050
+    sha512: aZhwcB6R80FFoaCZVrmVs41QqHgzxfSTgDySSpXMZH7QCjYEDuHAegpOgaW+UIIyrzR0GGLPWzOykRz+EOCTZQ==
+    size: 63553625
 path: Organiser-Setup-0.5.0.exe
-sha512: kZ1SgLgUwAjR0gyvp8SGiYBi9sASL9m83XV/b2siOjLGq/bdDfj7dXig7SeVqXXV31JQz5+HddQTqYf9iJJT5g==
-releaseDate: '2022-05-23T14:58:49.924Z'
+sha512: aZhwcB6R80FFoaCZVrmVs41QqHgzxfSTgDySSpXMZH7QCjYEDuHAegpOgaW+UIIyrzR0GGLPWzOykRz+EOCTZQ==
+releaseDate: '2022-05-23T21:13:13.659Z'

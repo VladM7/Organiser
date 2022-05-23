@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-const execPath = "D:/Info/Java, Electron, etc/To_Do"; //path.dirname(process.execPath);
+const execPath = path.dirname(process.execPath); //"D:/Info/Java, Electron, etc/To_Do";
 let nrTasks = 0,
   clearedTasks = 0,
   totalTasks = 0,
@@ -385,6 +385,7 @@ function resetProgress() {
 
 function day_of_week() {
   let day = new Date().getDay();
+  if (day == 1) resetProgress();
   let day_name = [
     "Sunday",
     "Monday",

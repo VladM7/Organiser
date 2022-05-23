@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const execPath = "D:/Info/Java, Electron, etc/To_Do"; //path.dirname(process.execPath); //"C:/Files/Electron/To_Do/";
+const execPath = path.dirname(process.execPath); //"D:/Info/Java, Electron, etc/To_Do";
 
 function calculate_dates(offset) {
   var tomorrow = new Date();
@@ -14,27 +14,6 @@ function calculate_dates(offset) {
     "-" +
     tomorrow.getDate()
   );
-}
-
-function how_many_tasks_due_in_date(date, structuredData) {
-  var count = 0;
-  for (i in structuredData) {
-    if (
-      structuredData[i].due_date &&
-      structuredData[i].due_date.year == date[2] + date[3] &&
-      structuredData[i].due_date.month == date[5] + date[6] &&
-      structuredData[i].due_date.day == date[8] + date[9]
-    ) {
-      count++;
-    }
-  }
-  return count;
-}
-
-function init_d(l, d, structuredData) {
-  for (i = 0; i < 7; i++) {
-    d[i] = how_many_tasks_due_in_date(l[i], structuredData);
-  }
 }
 
 function init_l(l) {
@@ -50,7 +29,7 @@ window.onload = (event) => {
   let rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
   //console.log(JSON.parse(rawData));
   let structuredData = JSON.parse(rawData);
-  console.log(structuredData);
+  //console.log(structuredData);
 
   init_l(l);
   for (i = 0; i < 7; i++) {
@@ -70,7 +49,7 @@ window.onload = (event) => {
       d[i] = count;
     }
   }
-  console.log(d);
+  //console.log(d);
 
   const ctx = document.getElementById("myChart");
   const myChart = new Chart(ctx, {
