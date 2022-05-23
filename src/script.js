@@ -290,23 +290,6 @@ function set_due_date(item) {
     structuredData[position].due_date.hour = timeTextbox[0] + timeTextbox[1];
     structuredData[position].due_date.minute = timeTextbox[3] + timeTextbox[4];
   }
-  let today = new Date();
-  if (
-    date_compare(
-      parseInt(structuredData[position].due_date.month),
-      parseInt(structuredData[position].due_date.day),
-      parseInt(structuredData[position].due_date.year) + 2000,
-      parseInt(structuredData[position].due_date.hour),
-      parseInt(structuredData[position].due_date.minute),
-      today.getMonth() + 1,
-      today.getDate() + 1,
-      today.getFullYear(),
-      today.getHours(),
-      today.getMinutes()
-    )
-  ) {
-    structuredData[position].notif = true;
-  }
   if (!structuredData[position].notif) structuredData[position].notif = false;
   fs.writeFileSync(
     path.join(execPath, "/config/items.json"),
