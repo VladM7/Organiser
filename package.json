@@ -45,7 +45,9 @@
   "homepage": "https://github.com/VladM7/Test#readme",
   "dependencies": {
     "auto-launch": "^5.0.5",
+    "chart.js": "^3.7.1",
     "electron-squirrel-startup": "^1.0.0",
+    "fullcalendar": "^5.11.0",
     "jquery": "^3.6.0"
   }
 }

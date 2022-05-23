@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar</title>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.css">
+    <script>
+        const fs = require("fs");
+        const path = require("path");
+
+        const execPath = "D:/Info/Java, Electron, etc/To_Do"; //path.dirname(process.execPath); //"C:/Files/Electron/To_Do/"; // //
+
+        var rawData = fs.readFileSync(path.join(execPath, "/config/items.json"));
+        var structuredData = JSON.parse(rawData);
+
+        var eventsData = [];
+
+        function create_date(i) {
+            if (structuredData[i].due_date.hour)
+                return 20 + structuredData[i].due_date.year + "-" +
+                    structuredData[i].due_date.month + "-" +
+                    structuredData[i].due_date.day + "T" + structuredData[i].due_date.hour + ":" +
+                    structuredData[i].due_date.minute + ":00";
+            return 20 + structuredData[i].due_date.year + "-" +
+                structuredData[i].due_date.month + "-" +
+                structuredData[i].due_date.day;
+        }
+
+        for (i in structuredData) {
+            if (structuredData[i].due_date) {
+                eventsData.push({
+                    title: structuredData[i].text,
+                    start: create_date(i),
+                    //end: structuredData[i].end,
+                });
+            }
+        }
+
+        console.log("notifications_check");
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var calendarEl = document.getElementById("calendar");
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: "dayGridMonth",
+                //initialDate: "2022-05-07",
+                headerToolbar: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth,timeGridWeek,timeGridDay",
+                },
+                events: eventsData,
+            });
+
+            calendar.render();
+        });
+
+    </script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        #calendar {
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='calendar'></div>
+</body>
+
+</html>

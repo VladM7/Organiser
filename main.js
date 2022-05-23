@@ -10,7 +10,7 @@ const {
 let AutoLaunch = require("auto-launch");
 const fs = require("fs");
 const path = require("path");
-const execPath = "C:/Files/Electron/To_Do/"; //path.dirname(process.execPath); //
+const execPath = "D:/Info/Java, Electron, etc/To_Do"; //path.dirname(process.execPath);
 
 let win = null;
 let tray;
@@ -20,11 +20,7 @@ const prefs = JSON.parse(
   fs.readFileSync(path.join(execPath, "/config/settings.json"))
 );
 
-/* ipc.on("open-error-dialog", function (event) {
-  dialog.showErrorBox("Error", "You clicked me you mf btch!!!");
-}); */
-
-function send_notification(text) {
+function send_notification(text, dueDate) {
   if (Notification.isSupported()) {
     let rawData1 = fs.readFileSync(
       path.join(execPath, "config/notifications.json")
@@ -35,9 +31,20 @@ function send_notification(text) {
     let vars = JSON.parse(rawData2);
     let structuredData = JSON.parse(rawData1);
     structuredData.title = text;
-    structuredData.body =
-      Math.round((vars.completedItems / vars.totalItems) * 100) +
-      "% of all tasks completed";
+    if (dueDate.month && dueDate.day && dueDate.year) {
+      structuredData.body =
+        "Due on " +
+        dueDate.month +
+        "/" +
+        dueDate.day +
+        ", " +
+        Math.round((vars.completedItems / vars.totalItems) * 100) +
+        "% of all tasks completed";
+    } else {
+      structuredData.body =
+        Math.round((vars.completedItems / vars.totalItems) * 100) +
+        "% of all tasks completed";
+    }
     const notification = new Notification(structuredData);
     notification.show();
   } else {
@@ -105,7 +112,7 @@ function notifications_check() {
       structuredData[i].notif == false
     ) {
       structuredData[i].notif = true;
-      send_notification(structuredData[i].text);
+      send_notification(structuredData[i].text, structuredData[i].due_date);
     }
   fs.writeFileSync(
     path.join(execPath, "/config/items.json"),
@@ -309,6 +316,33 @@ ipcMain.on("send-notif", (event) => {
   } else {
     console.warn("Notifications not supported on this system.");
   }
+});
+
+ipcMain.on("open-calendar-view", (event) => {
+  const calendar = new BrowserWindow({
+    width: 800,
+    height: 600,
+    icon: path.join(execPath, "/build/icon.ico"),
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+  calendar.setMenu(null);
+  calendar.loadFile(path.join(__dirname, "src/calendarView.html"));
+});
+ipcMain.on("open-charts-view", (event) => {
+  const charts = new BrowserWindow({
+    width: 800,
+    height: 500,
+    icon: path.join(execPath, "/build/icon.ico"),
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+  charts.setMenu(null);
+  charts.loadFile(path.join(__dirname, "src/chartsView.html"));
 });
 
 app.on("window-all-closed", () => {

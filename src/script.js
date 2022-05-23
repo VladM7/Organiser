@@ -2,20 +2,12 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-const execPath = "C:/Files/Electron/To_Do/"; //path.dirname(process.execPath); //
+const execPath = "D:/Info/Java, Electron, etc/To_Do"; //path.dirname(process.execPath);
 let nrTasks = 0,
   clearedTasks = 0,
   totalTasks = 0,
   editMode = 0;
 
-var colors = [
-  "#ffffff", //white
-  "#1a1a1a", //bg
-  "#353B40",
-  "#5E6366",
-  /*text*/
-  "#000000",
-];
 // var activeMode = 0;
 
 /* function init() {
@@ -95,6 +87,38 @@ function show_items(textData) {
   );
 }
 
+function date_compare(
+  month,
+  day,
+  year,
+  hour,
+  minute,
+  monthNow,
+  dayNow,
+  yearNow,
+  hourNow,
+  minuteNow
+) {
+  if (
+    year < yearNow ||
+    (year == yearNow && month < monthNow) ||
+    (year == yearNow && month == monthNow && day < dayNow) ||
+    (year == yearNow && month == monthNow && day == dayNow && hour < hourNow) ||
+    (year == yearNow &&
+      month == monthNow &&
+      day == dayNow &&
+      hour == hourNow &&
+      minute < minuteNow) ||
+    (year == yearNow &&
+      month == monthNow &&
+      day == dayNow &&
+      hour == hourNow &&
+      minute == minuteNow)
+  )
+    return 1;
+  return 0;
+}
+
 function additem_json(textData) {
   //* HTML
   show_items(textData);
@@ -128,7 +152,8 @@ function additem_json(textData) {
 
   //* UI
   progressbar();
-  console.log({ nrTasks, totalTasks });
+  update_tasksLeft();
+  //console.log({ nrTasks, totalTasks });
 }
 
 function clearAll() {
@@ -149,6 +174,8 @@ function clearAll() {
     .fadeOut("normal", function () {
       $(".list-group").children().remove();
     });
+
+  update_tasksLeft();
 }
 
 function clear_item(item) {
@@ -187,6 +214,7 @@ function clear_item(item) {
 
   //* UI
   progressbar();
+  update_tasksLeft();
   console.log({ nrTasks, totalTasks });
 }
 
@@ -262,7 +290,24 @@ function set_due_date(item) {
     structuredData[position].due_date.hour = timeTextbox[0] + timeTextbox[1];
     structuredData[position].due_date.minute = timeTextbox[3] + timeTextbox[4];
   }
-  structuredData[position].notif = false;
+  let today = new Date();
+  if (
+    date_compare(
+      parseInt(structuredData[position].due_date.month),
+      parseInt(structuredData[position].due_date.day),
+      parseInt(structuredData[position].due_date.year) + 2000,
+      parseInt(structuredData[position].due_date.hour),
+      parseInt(structuredData[position].due_date.minute),
+      today.getMonth() + 1,
+      today.getDate() + 1,
+      today.getFullYear(),
+      today.getHours(),
+      today.getMinutes()
+    )
+  ) {
+    structuredData[position].notif = true;
+  }
+  if (!structuredData[position].notif) structuredData[position].notif = false;
   fs.writeFileSync(
     path.join(execPath, "/config/items.json"),
     JSON.stringify(structuredData, null, 2)
@@ -289,6 +334,7 @@ function edit_task(item) {
   );
   $(item).children("input").val(item.text().trim());
   show_due_date(item);
+
   //console.log("pos still: " + pos);
 }
 
@@ -365,11 +411,16 @@ function init_settings() {
   else $("#runStDiv").checkbox("uncheck");
 }
 
+function update_tasksLeft() {
+  $(".value").html(`<i class="tasks icon"></i> &nbsp;&nbsp;` + nrTasks);
+}
+
 function initialize() {
   init_json();
   progressbar();
   day_of_week();
   init_settings();
+  update_tasksLeft();
 }
 
 $(function () {
@@ -413,34 +464,19 @@ $(function () {
     //$(this).html(`<i class="listicon far fa-circle"></i>`);
   });
 
+  $(document).on("mouseenter", ".calendarButton", function () {
+    $(this).addClass("outline");
+  });
+  $(document).on("mouseleave", ".calendarButton", function () {
+    $(this).removeClass("outline");
+  });
+
   ipcRenderer.on("clear-all", (event) => {
     clearAll();
     //console.log("cleared all");
   });
   ipcRenderer.on("reset-progress", (event) => {
     resetProgress();
-  });
-
-  $("#darkMode").on("change", function () {
-    if ($("#darkMode").is(":checked")) {
-      activeMode = 1;
-      $("body").css("background-color", colors[1]);
-      $("body").css("color", colors[0]);
-      $("#newTask").css("background-color", colors[2]);
-      $(".item").css("color", colors[0]);
-      $(".item").css("background-color", colors[2]);
-      $("#newTask").addClass("lightgray");
-      $("#newTask").css("color", colors[0]);
-    } else if ($("#darkMode").is(":not(:checked)")) {
-      activeMode = 0;
-      $("body").css("background-color", colors[0]);
-      $("body").css("color", colors[3]);
-      $("#newTask").css("background-color", colors[0]);
-      $(".item").css("background-color", colors[0]);
-      $(".item").css("color", colors[3]);
-      $("#newTask").removeClass("lightgray");
-      $("#newTask").css("color", colors[3]);
-    }
   });
 
   //* settings
@@ -465,6 +501,13 @@ $(function () {
       path.join(execPath, "/config/settings.json"),
       JSON.stringify(structuredData, null, 2)
     );
+  });
+
+  $(document).on("click", ".calendarButton", function () {
+    ipcRenderer.send("open-calendar-view");
+  });
+  $(document).on("click", ".chartsButton", function () {
+    ipcRenderer.send("open-charts-view");
   });
   //progressbar();
   //additem_json("lol");
